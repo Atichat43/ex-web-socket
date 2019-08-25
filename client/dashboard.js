@@ -10,6 +10,8 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 
+import { CTX } from './store'
+
 const useStyles = makeStyles(theme => ({
   root: {
     height: '650px',
@@ -60,6 +62,13 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = () => {
   const classes = useStyles()
+  // Store
+  const [allChat] = React.useContext(CTX)
+  const topics = Object.keys(allChat)
+
+  // State
+  const [text, setText] = React.useState('')
+  const [activeTopic, setActiveTopic] = React.useState(topics[0])
 
   return (
     <Paper className={classes.root}>
@@ -76,8 +85,12 @@ const Dashboard = () => {
           <ListSubheader component="div"> Topics </ListSubheader>
           <List component="nav">
             {
-              ['Atichat', 'Boss'].map(topic => (
-                <ListItem button>
+              topics.map(topic => (
+                <ListItem
+                  button
+                  key={topic}
+                  onClick={e => setActiveTopic(e.target.innerText)}
+                >
                   <ListItemText primary={topic} />
                 </ListItem>
               ))
@@ -85,10 +98,10 @@ const Dashboard = () => {
           </List>
         </div>
         <div className={classes.warpperChatWindow}>
-          <ListSubheader component="div"> ChatWindow </ListSubheader>
+          <ListSubheader component="div"> {activeTopic} </ListSubheader>
           <div className={classes.contentChatWindow}>
-            {[{ from: 'User', msg: 'hello' }].map(chat => (
-              < div className={classes.flex}>
+            {allChat[activeTopic].map(chat => (
+              < div className={classes.flex} key={`${chat.from}-${chat.msg}`}>
                 <Typography component="p"> {`${chat.from}:`} </Typography>
                 <Chip label={chat.msg} className={classes.chip} />
               </div>
@@ -100,6 +113,8 @@ const Dashboard = () => {
                 label="Send a chat"
                 placeholder="texting something here"
                 className={classes.chatBox}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
               />
               <Button
                 variant="contained"
