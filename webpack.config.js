@@ -35,7 +35,7 @@ module.exports = {
     }),
   ],
   devServer: {
-    port: 3001,
+    port: 3000,
     contentBase: path.resolve(__dirname, 'public'),
   },
   devtool: 'cheap-eval-source-map',
