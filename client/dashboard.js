@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
 const Dashboard = () => {
   const classes = useStyles()
   // Store
-  const [allChat] = React.useContext(CTX)
+  const { allChat, sendChatAction, user } = React.useContext(CTX)
   const topics = Object.keys(allChat)
 
   // State
@@ -120,6 +120,10 @@ const Dashboard = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
+                onClick={() => {
+                  sendChatAction({from: user, msg: text, topic: activeTopic})
+                  setText('')
+                }}
               >
                 Send
                 </Button>
